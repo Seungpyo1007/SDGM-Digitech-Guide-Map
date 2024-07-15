@@ -1,4 +1,4 @@
-package com.example.digitechguidemap
+package com.example.SDGM
 
 import io.flutter.embedding.android.FlutterActivity
 

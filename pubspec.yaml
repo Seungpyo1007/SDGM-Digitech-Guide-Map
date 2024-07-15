@@ -50,7 +50,10 @@ dev_dependencies:
   firebase_core: ^3.2.0
   firebase_auth: ^5.1.2
   animate_do: ^3.1.2
-
+  google_sign_in: ^6.2.1
+  flutter_facebook_auth: ^7.0.1
+  flutter_secure_storage: ^9.2.2
+  provider: ^6.1.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -73,6 +76,8 @@ flutter:
     - assets/images/clock.png
     - assets/images/light-1.png
     - assets/images/light-2.png
+    - assets/images/facebook.png
+    - assets/images/google.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
