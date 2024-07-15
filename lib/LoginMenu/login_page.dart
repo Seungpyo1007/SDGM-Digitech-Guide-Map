@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class HomePage extends StatelessWidget {
+class LoginPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> _login(BuildContext context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      // 로그인 성공 시 수행할 작업
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No user found for that email.")));
+      } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Wrong password provided.")));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,6 +127,7 @@ class HomePage extends StatelessWidget {
                                             color: Color.fromRGBO(
                                                 143, 148, 251, 1)))),
                                 child: TextField(
+                                  controller: emailController,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: "Email or Phone number",
@@ -116,6 +138,7 @@ class HomePage extends StatelessWidget {
                               Container(
                                 padding: EdgeInsets.all(8.0),
                                 child: TextField(
+                                  controller: passwordController,
                                   obscureText: true,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
@@ -134,7 +157,7 @@ class HomePage extends StatelessWidget {
                         duration: Duration(milliseconds: 1900),
                         child: InkWell(
                           onTap: () {
-                            // 로그인 버튼 클릭 시 수행할 작업
+                            _login(context); // 로그인 버튼 클릭 시 수행할 작업
                           },
                           child: Container(
                             height: 50,

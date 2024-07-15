@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
-import 'LoginMenu/login_page.dart'; // login_page.dart 파일을 import
+import 'package:firebase_core/firebase_core.dart';
+import 'LoginMenu/login_page.dart'; // 경로는 실제 파일 경로로 변경하세요
 
-void main() => runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(), // HomePage를 home으로 설정
-    )
-);
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: LoginPage(),
+    );
+  }
+}
