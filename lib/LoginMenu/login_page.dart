@@ -70,10 +70,11 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (e) {
       setState(() {
-        _errorMessage = "Google Sign-In Failed: $e";
+        _errorMessage = "Google Sign-In Failed: ${e.toString()}";
       });
     }
   }
+
 
   Future<void> _facebookSignIn(BuildContext context) async {
     try {
