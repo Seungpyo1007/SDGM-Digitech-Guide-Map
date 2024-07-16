@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:animate_do/animate_do.dart';
 import '../MainMenu/main_page.dart';
+import 'signup_page.dart'; // Import the SignUpPage
+import 'reset_password.dart'; // Import the ResetPasswordPage
 
 class LoginPage extends StatefulWidget {
   @override
@@ -77,7 +79,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final LoginResult result = await FacebookAuth.instance.login();
       if (result.status == LoginStatus.success) {
-        final AccessToken accessToken = result.accessToken!;
+        // final AccessToken accessToken = result.accessToken!;
+        // final AuthCredential credential = FacebookAuthProvider.credential(accessToken.token);
+        // await FirebaseAuth.instance.signInWithCredential(credential);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Facebook Sign-In Successful")));
         Navigator.pushReplacement(
           context,
@@ -95,18 +99,26 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _navigateToResetPassword(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ResetPasswordPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: FadeInUp(
-        duration: Duration(milliseconds: 1500),
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
+            height: MediaQuery.of(context).size.height,
             child: Column(
               children: <Widget>[
                 Container(
-                  height: 400,
+                  height: 350,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/images/background.png'),
@@ -182,141 +194,148 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(30.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      FadeInUp(
-                        duration: Duration(milliseconds: 1800),
-                        child: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Color.fromRGBO(143, 148, 251, 1),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color.fromRGBO(143, 148, 251, .2),
-                                blurRadius: 20.0,
-                                offset: Offset(0, 10),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        FadeInUp(
+                          duration: Duration(milliseconds: 1800),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Color.fromRGBO(143, 148, 251, 1),
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Color.fromRGBO(143, 148, 251, 1),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(143, 148, 251, .2),
+                                  blurRadius: 20.0,
+                                  offset: Offset(0, 10),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Color.fromRGBO(143, 148, 251, 1),
+                                      ),
+                                    ),
+                                  ),
+                                  child: TextField(
+                                    controller: emailController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Email or Phone number",
+                                      hintStyle: TextStyle(color: Colors.grey[700]),
                                     ),
                                   ),
                                 ),
-                                child: TextField(
-                                  controller: emailController,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Email or Phone number",
-                                    hintStyle: TextStyle(color: Colors.grey[700]),
+                                Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    controller: passwordController,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Password",
+                                      hintStyle: TextStyle(color: Colors.grey[700]),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        _errorMessage != null
+                            ? FadeInUp(
+                          duration: Duration(milliseconds: 1900),
+                          child: Text(
+                            _errorMessage!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
+                            : Container(),
+                        SizedBox(height: 10),
+                        FadeInUp(
+                          duration: Duration(milliseconds: 1900),
+                          child: InkWell(
+                            onTap: () {
+                              _login(context);
+                            },
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromRGBO(143, 148, 251, 1),
+                                    Color.fromRGBO(143, 148, 251, .6),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              Container(
-                                padding: EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: passwordController,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Password",
-                                    hintStyle: TextStyle(color: Colors.grey[700]),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        FadeInUp(
+                          duration: Duration(milliseconds: 2000),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  _navigateToResetPassword(context);
+                                },
+                                child: Text(
+                                  "Forgot Password?",
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(143, 148, 251, 1),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 24),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SignUpPage()),
+                                  );
+                                },
+                                child: Text(
+                                  "Sign Up",
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(143, 148, 251, 1),
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      SizedBox(height: 30), // Increased space above the buttons
-                      _errorMessage != null
-                          ? FadeInUp(
-                        duration: Duration(milliseconds: 1900),
-                        child: Text(
-                          _errorMessage!,
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      )
-                          : Container(),
-                      SizedBox(height: 10),
-                      FadeInUp(
-                        duration: Duration(milliseconds: 1900),
-                        child: InkWell(
-                          onTap: () {
-                            _login(context);
-                          },
-                          child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color.fromRGBO(143, 148, 251, 1),
-                                  Color.fromRGBO(143, 148, 251, .6),
-                                ],
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 70),
-                      FadeInUp(
-                        duration: Duration(milliseconds: 2000),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                // Implement Forgot Password functionality
-                              },
-                              child: Text(
-                                "Forgot Password?",
-                                style: TextStyle(
-                                  color: Color.fromRGBO(143, 148, 251, 1),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 24),
-                            InkWell(
-                              onTap: () {
-                                // Implement Sign Up functionality
-                              },
-                              child: Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                  color: Color.fromRGBO(143, 148, 251, 1),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      DividerRow(),
-                      Logos(context),
-                    ],
+                        SizedBox(height: 20),
+                        DividerRow(),
+                        Logos(context),
+                      ],
+                    ),
                   ),
                 ),
               ],
