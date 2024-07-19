@@ -3,7 +3,7 @@ import 'package:digitechguidemap/training/training_screen.dart';
 import 'package:flutter/material.dart';
 import '../bottom_navigation_view/bottom_bar_view.dart';
 import '../app_theme.dart';
-import '../my_diary/my_diary_screen.dart';
+import '../my_diary/main_screen.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
-    tabBody = MyDiaryScreen(animationController: animationController);
+    tabBody = MainScreen(animationController: animationController);
     super.initState();
   }
 
@@ -85,7 +85,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 }
                 setState(() {
                   tabBody =
-                      MyDiaryScreen(animationController: animationController);
+                      MainScreen(animationController: animationController);
                 });
               });
             } else if (index == 1 || index == 3) {
@@ -95,7 +95,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 }
                 setState(() {
                   tabBody =
-                      TrainingScreen(animationController: animationController);
+                      AccountInfoScreen(animationController: animationController);
                 });
               });
             }
